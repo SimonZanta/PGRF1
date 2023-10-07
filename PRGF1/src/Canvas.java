@@ -69,18 +69,6 @@ public class Canvas {
 
 		panel.requestFocusInWindow();
 
-		panel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				switch (e.getButton()){
-					case MouseEvent.MOUSE_CLICKED:
-						Point location = MouseInfo.getPointerInfo().getLocation();
-
-						for(int i = 0; i < location.getX(); i++) {
-						}
-				}
-			}
-		});
 		panel.addKeyListener(new KeyAdapter() {
 
 			@Override

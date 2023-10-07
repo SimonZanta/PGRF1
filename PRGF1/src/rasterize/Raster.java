@@ -1,5 +1,6 @@
 package rasterize;
 
+// started on 2. seminar
 public interface Raster {
 
     /**
