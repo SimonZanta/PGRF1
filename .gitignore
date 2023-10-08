@@ -1,2 +1,5 @@
-.idea\
-out\
+# IDE project files
+.idea/
+
+# Compiled output files
+out/
