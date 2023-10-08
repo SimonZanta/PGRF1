@@ -52,7 +52,9 @@ public class Canvas{
             @Override
             public void keyPressed(KeyEvent e) {
                 switch(e.getKeyCode()){
-                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_C:
+                        img.clear(0x000000);
+                        panel.repaint();
                         break;
                 }
             }
