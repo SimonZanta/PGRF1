@@ -1,8 +1,6 @@
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 import rasterData.LineRasterTrivial;
 import rasterData.LineRasterizerMidpoint;
@@ -20,6 +18,11 @@ public class Canvas{
     private JFrame frame;
     private JPanel panel;
     private RasterBI img;
+
+    private int startX, startY;
+    private Point start;
+
+    private ArrayList<Line> lines = new ArrayList<>();
 
     public Canvas(int width, int height) {
         frame = new JFrame();
@@ -62,8 +65,6 @@ public class Canvas{
 
         panel.addMouseListener(new MouseAdapter() {
 
-            int startX, startY;
-            Point start;
             @Override
             public void mousePressed(MouseEvent e) {
                 startX = e.getX();
@@ -75,51 +76,37 @@ public class Canvas{
             @Override
             public void mouseReleased(MouseEvent e){
 
-                    System.out.println("xddddd");
                     Point end = new Point(e.getX(), e.getY());
-
                     Line line = new Line(start, end);
 
-                    System.out.println(line.getX1() + " " + line.getY1() + " " + line.getX2() + " " + line.getY2());
+                    lines.add(line);
 
-                    LineRasterizerMidpoint lineRaster = new LineRasterizerMidpoint();
+            }
+        });
 
-                    lineRaster.Midpoint(img, line);
+        panel.addMouseMotionListener(new MouseMotionAdapter() {
 
-                    panel.repaint();
+            @Override
+            public void mouseDragged(MouseEvent e){
+
+                img.clear(0x000000);
+
+                Point end = new Point(e.getX(), e.getY());
+                Line line = new Line(start, end);
+                LineRasterizerMidpoint lineRaster = new LineRasterizerMidpoint();
+                lineRaster.Midpoint(img, line);
+
+                for(int i = 0; i < lines.size(); i++){
+                    lineRaster.Midpoint(img, lines.get(i));
+                }
+
+                panel.repaint();
             }
         });
     }
 
-    // start function
-    public void start() {
-        int x = img.getWidth()/2;
-        int y = img.getHeight()/2;
-        Point point1 = new Point(x, y);
-        Point point2 = new Point(450, 250);
-        Point point3 = new Point(550, 1);
-        Point point4 = new Point(600, 1);
-
-        Line line1 = new Line(point1, point4);
-        Line line2 = new Line(point1, point3);
-
-        LineRasterTrivial trivial = new LineRasterTrivial();
-        LineRasterizerMidpoint midpoint = new LineRasterizerMidpoint();
-
-        /*trivial.LineRasterTrivial(img, line1);
-        trivial.LineRasterTrivial(img, line2);*/
-
-        midpoint.Midpoint(img, line1);
-        midpoint.Midpoint(img, line2);
-
-        /*midpoint.Midpoint(img);*/
-
-        /*point1.Draw(img);*/
-        panel.repaint();
-    }
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Canvas(800, 600).start());
+        SwingUtilities.invokeLater(() -> new Canvas(800, 600));
     }
 
 }
