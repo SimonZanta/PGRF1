@@ -1,11 +1,16 @@
-package rasterData;
+package rasterOp;
 
 import model.Line;
 import model.Point;
+import rasterData.RasterBI;
 
-public class LineRasterTrivial {
+import javax.swing.*;
+import java.util.ArrayList;
 
-    public void LineRasterTrivial(RasterBI img, Line line){
+public class LineRasterTrivial extends Liner {
+
+    @Override
+    public void drawLine(RasterBI img, Line line, int dotSize){
         int x1 = line.getFirst().x;
         int x2 = line.getSecond().x;
         int y1 = line.getFirst().y;
