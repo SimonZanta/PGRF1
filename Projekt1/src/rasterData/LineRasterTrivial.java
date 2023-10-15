@@ -6,10 +6,10 @@ import model.Point;
 public class LineRasterTrivial {
 
     public void LineRasterTrivial(RasterBI img, Line line){
-        int x1 = line.getX1();
-        int x2 = line.getX2();
-        int y1 = line.getY1();
-        int y2 = line.getY2();
+        int x1 = line.getFirst().x;
+        int x2 = line.getSecond().x;
+        int y1 = line.getFirst().y;
+        int y2 = line.getSecond().y;
 
 
         int x;
