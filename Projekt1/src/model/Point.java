@@ -1,6 +1,8 @@
 package model;
 import rasterData.RasterBI;
 
+import java.util.ArrayList;
+
 public class Point {
     public int x, y;
 
@@ -8,6 +10,8 @@ public class Point {
         this.x = x;
         this.y = y;
     }
+
+
 
     public void Draw(RasterBI img){
         img.setColor(this.x, this.y, 0xff00ff);
