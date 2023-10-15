@@ -11,4 +11,5 @@ public interface Raster {
     Optional<Integer> getColor(int c, int r);
 
     void clear(int background);
+
 }

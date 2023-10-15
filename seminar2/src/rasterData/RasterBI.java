@@ -50,4 +50,5 @@ public class RasterBI implements Raster, Presentable{
     public void present(Graphics graphics) {
         graphics.drawImage(img, 0, 0, null);
     }
+
 }

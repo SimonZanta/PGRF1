@@ -1,8 +1,9 @@
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import rasterData.RasterBI;
+import objectdata.Point;
+import rasterop.LinerTrivial;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +15,10 @@ public class Canvas{
     private JFrame frame;
     private JPanel panel;
     private RasterBI img;
+
+    double startX, startY;
+
+    Point start;
 
     public Canvas(int width, int height) {
         frame = new JFrame();
@@ -42,13 +47,30 @@ public class Canvas{
         frame.setVisible(true);
         panel.requestFocusInWindow();
 
-        panel.addKeyListener(new KeyAdapter() {
+        panel.addMouseListener(new MouseAdapter() {
+
             @Override
-            public void keyPressed(KeyEvent e) {
-                switch(e.getKeyCode()){
-                    case KeyEvent.VK_UP:
-                        break;
-                }
+            public void mousePressed(MouseEvent e) {
+                startX = e.getX();
+                startY = e.getY();
+
+                start = new Point(startX, startY);
+            }
+        });
+
+        panel.addMouseMotionListener(new MouseMotionAdapter() {
+
+
+            @Override
+            public void mouseDragged(MouseEvent e){
+                img.clear(0x000000);
+
+                Point end = new Point(e.getX(), e.getY());
+                LinerTrivial lineRaster = new LinerTrivial();
+
+                lineRaster.drawline(img, startX, end.getX(), startY, end.getY(), 0xff0000);
+
+                panel.repaint();
             }
         });
     }
@@ -62,8 +84,6 @@ public class Canvas{
 
     // draw pixels on panel
     public void draw(int x,int y, int rgb) {
-        // clear will make cursor just move
-        // comment clear to draw      /*clear();*/
         img.setColor(x, y, rgb);
     }
 
