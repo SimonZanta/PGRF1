@@ -98,7 +98,7 @@ public class Canvas{
                     startX = e.getX();
                     startY = e.getY();
 
-                    start = new Point(startX, startY);
+                    start = new Point(400, 300);
 
                 if(editLine){
                     Optional<Point> point = start.getClosestEndpointInRadius(img, lineRaster);
@@ -162,22 +162,49 @@ public class Canvas{
         int dx = x2 - x1;
         int dy = y2 - y1;
 
-        double angle = Math.atan2(dy, dx);
-        double angleDeg = angle * 180 / Math.PI;
 
-        int angleDegRounded = (int) Math.round((angleDeg / 90)) * 90;
+        double angle = Math.toDegrees(Math.atan2(dy, dx));
 
-        System.out.println(angleDegRounded);
+        if(angle < 0){
+            angle += 360;
+        }
 
+        int angleDegRounded = (int) Math.round((angle / 45)) * 45;
+
+        int length = Math.max(y1, y2) - Math.min(y1, y2);
+
+        double c = (length * (Math.sqrt(2)/2));
+        double b = (c / (Math.sqrt(2)/2));
+        int x, y;
         switch (angleDegRounded){
             case 90:
                 return new Point(x1, y2);
-            case -90:
+            case 270:
                 return new Point(x1, y2);
             case 0:
                 return new Point(x2, y1);
             case 180:
                 return new Point(x2, y1);
+            case 315:
+                x = (int) (x1 + b);
+                y = y1 - length;
+
+                return new Point(x, y);
+            case 225:
+                x = (int) (x1 - b);
+                y = y1 - length;
+
+                return new Point(x, y);
+            case 135:
+                x = (int) (x1 - b);
+                y = y1 + length;
+
+                return new Point(x, y);
+            case 45:
+                x = (int) (x1 + b);
+                y = y1 + length;
+
+                return new Point(x, y);
         }
 
         return new Point(x2, y2);
