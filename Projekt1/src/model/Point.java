@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public class Point {
     public int x, y;
-    Liner lineRaster = new LineRasterizerMidpoint();
     public Point(int x, int y){
         this.x = x;
         this.y = y;
@@ -19,22 +18,21 @@ public class Point {
         img.setColor(this.x, this.y, 0xff00ff);
     }
 
+    public Optional<Point> getClosestEndpointInRadius(RasterBI img, Liner liner){
 
-    public Optional<Point> getClosestEndpointInRadius(RasterBI img, ArrayList<Line> lines, JPanel panel){
+        for(int i = 0; i < liner.lines.size(); i++){
 
-        for(int i = 0; i < lines.size(); i++){
+            double radiusFirst = calculateRadius(liner.lines.get(i).getFirst());
+            double radiusSecond = calculateRadius(liner.lines.get(i).getSecond());
 
-            double radiusFirst = calculateRadius(lines.get(i).getFirst());
-            double radiusSecond = calculateRadius(lines.get(i).getSecond());
-
-            Point firstPoint = lines.get(i).getFirst();
-            Point secondPoint = lines.get(i).getSecond();
+            Point firstPoint = liner.lines.get(i).getFirst();
+            Point secondPoint = liner.lines.get(i).getSecond();
 
             if(radiusFirst <= 20 || radiusSecond <= 20){
 
-                lines.remove(i);
+                liner.lines.remove(i);
 
-                lineRaster.redrawLines(img, lines, panel);
+                liner.redrawLines(img);
 
                 if(radiusFirst <= 20){
                     return Optional.of(secondPoint);

@@ -3,6 +3,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import rasterOp.LineRasterTrivial;
 import rasterOp.LineRasterizerMidpoint;
 import rasterData.RasterBI;
 import model.Point;
@@ -27,7 +28,6 @@ public class Canvas{
 
     Boolean editLine = false;
 
-    Liner lineRaster = new LineRasterizerMidpoint();
 
     public Canvas(int width, int height) {
         frame = new JFrame();
@@ -55,6 +55,8 @@ public class Canvas{
         frame.pack();
         frame.setVisible(true);
         panel.requestFocusInWindow();
+
+        Liner lineRaster = new LineRasterizerMidpoint(panel, lines);
 
         panel.addKeyListener(new KeyAdapter() {
             @Override
@@ -90,7 +92,7 @@ public class Canvas{
                     start = new Point(startX, startY);
 
                 if(editLine){
-                    Optional<Point> point = start.getClosestEndpointInRadius(img, lines, panel);
+                    Optional<Point> point = start.getClosestEndpointInRadius(img, lineRaster);
 
                     if(point.isPresent()){
                         Point startPoint = point.get();
@@ -110,6 +112,8 @@ public class Canvas{
                     Line line = new Line(start, end);
 
                     lines.add(line);
+
+                    lineRaster.redrawLines(img);
             }
         });
 
@@ -122,13 +126,9 @@ public class Canvas{
 
                     Point end = new Point(e.getX(), e.getY());
                     Line line = new Line(start, end);
-                    lineRaster.drawLine(img, line);
+                    lineRaster.drawLine(img, line, 8);
 
-                    for(int i = 0; i < lines.size(); i++){
-                        lineRaster.drawLine(img, lines.get(i));
-                    }
-
-                    panel.repaint();
+                    lineRaster.redrawLines(img);
             }
         });
     }
