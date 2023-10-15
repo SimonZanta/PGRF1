@@ -1,10 +1,16 @@
-package rasterData;
+package rasterOp;
 
 import model.Line;
 import model.Point;
+import rasterData.RasterBI;
+import rasterOp.Liner;
 
-public class LineRasterizerMidpoint {
-    public void Midpoint(RasterBI img, Line line){
+import javax.swing.*;
+import java.util.ArrayList;
+
+public class LineRasterizerMidpoint implements Liner {
+    @Override
+    public void drawLine(RasterBI img, Line line){
 
         int x1 = line.getFirst().x;
         int x2 = line.getSecond().x;
@@ -25,7 +31,7 @@ public class LineRasterizerMidpoint {
 
             Line lineNew = new Line(point1new, point2new);
 
-            Midpoint(img, lineNew);
+            drawLine(img, lineNew);
         }
 
         if((Math.abs(x2-sx) > 1) || (Math.abs(y2 - sy) > 1)){
@@ -35,7 +41,7 @@ public class LineRasterizerMidpoint {
 
             Line lineNew = new Line(point1new, point2new);
 
-            Midpoint(img, lineNew);
+            drawLine(img, lineNew);
         }
     }
 }
