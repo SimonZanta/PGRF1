@@ -36,7 +36,7 @@ public class LineRasterTrivial extends Liner {
                 System.out.println("x: " + x + " | y: " + y);
 
                 Point pixel = new Point(x, y);
-                pixel.Draw(img);
+                pixel.Draw(img, 0xff00ff);
 
                 x++;
             }
@@ -48,10 +48,20 @@ public class LineRasterTrivial extends Liner {
                 System.out.println("x: " + x + " | y: " + y);
 
                 Point pixel = new Point(x, y);
-                pixel.Draw(img);
+                pixel.Draw(img, 0xff00ff);
 
                 y++;
             }
         }
+    }
+
+    @Override
+    public void drawLine(RasterBI img, Line line) {
+
+    }
+
+    @Override
+    public void deleteLine(RasterBI img, Line line) {
+
     }
 }

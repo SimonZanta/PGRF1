@@ -3,12 +3,13 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import rasterOp.LineRasterTrivial;
 import rasterOp.LineRasterizerMidpoint;
 import rasterData.RasterBI;
 import model.Point;
 import model.Line;
 import rasterOp.Liner;
+import model.Polygon;
+import rasterOp.PolygonRasterizer;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -24,11 +25,16 @@ public class Canvas{
     private int startX, startY;
     private Point start;
 
+    int pixelColor = 0xff00ff;
+
     private ArrayList<Line> lines = new ArrayList<>();
 
-    Boolean editLine = false;
+    boolean editLine = false;
     boolean snapToGrid = false;
+    boolean createPoligon = false;
 
+    ArrayList<Point> polygonArray = new ArrayList<>();
+    Polygon polygon = new Polygon(polygonArray);
 
     public Canvas(int width, int height) {
         frame = new JFrame();
@@ -57,7 +63,7 @@ public class Canvas{
         frame.setVisible(true);
         panel.requestFocusInWindow();
 
-        Liner lineRaster = new LineRasterizerMidpoint(panel, lines);
+        Liner lineRaster = new LineRasterizerMidpoint(lines);
 
         panel.addKeyListener(new KeyAdapter() {
             @Override
@@ -87,18 +93,46 @@ public class Canvas{
                             snapToGrid = false;
                         }
                         break;
+                    case KeyEvent.VK_P:
+
+                        if(createPoligon == false){
+                            System.out.println("Poligon enabled");
+                            createPoligon = true;
+                        }else{
+                            System.out.println("Poligon disabled");
+                            createPoligon = false;
+                        }
+                        break;
                 }
             }
         });
 
+        PolygonRasterizer polygonRasterizer = new PolygonRasterizer();
+
         panel.addMouseListener(new MouseAdapter() {
 
+            @Override
+            public void mouseClicked(MouseEvent e){
+                if(createPoligon){
+                    img.clear(0x000000);
+                    lineRaster.redrawLines(img);
+                    startX = e.getX();
+                    startY = e.getY();
+
+                    start = new Point(startX, startY);
+
+                    polygon.addPoint(start);
+
+                    polygonRasterizer.drawPolygon(img, polygon);
+                    panel.repaint();
+                }
+            }
             @Override
             public void mousePressed(MouseEvent e) {
                     startX = e.getX();
                     startY = e.getY();
 
-                    start = new Point(400, 300);
+                    start = new Point(startX, startY);
 
                 if(editLine){
                     Optional<Point> point = start.getClosestEndpointInRadius(img, lineRaster);
@@ -116,18 +150,23 @@ public class Canvas{
 
             @Override
             public void mouseReleased(MouseEvent e){
-                Point end = new Point(e.getX(), e.getY());
-                Line line = new Line(start, end);
+                if(!createPoligon){
+                    Point end = new Point(e.getX(), e.getY());
+                    Line line = new Line(start, end);
 
-                if(snapToGrid == true){
-                    Point x = line.returnAngledPoint();
-                    end = x;
-                    line = new Line(start, end);
+                    if(snapToGrid == true){
+                        Point x = line.returnAngledPoint();
+                        end = x;
+                        line = new Line(start, end);
+                    }
+
+                    lines.add(line);
+
+                    lineRaster.redrawLines(img);
+                    polygonRasterizer.drawPolygon(img, polygon);
+
+                    panel.repaint();
                 }
-
-                lines.add(line);
-
-                lineRaster.redrawLines(img);
             }
         });
 
@@ -136,6 +175,8 @@ public class Canvas{
 
             @Override
             public void mouseDragged(MouseEvent e){
+
+                if(!createPoligon){
                     img.clear(0x000000);
                     Point end = new Point(e.getX(), e.getY());
                     Line line = new Line(start, end);
@@ -149,6 +190,10 @@ public class Canvas{
                     lineRaster.drawLine(img, line, 8);
 
                     lineRaster.redrawLines(img);
+                    polygonRasterizer.drawPolygon(img, polygon);
+
+                    panel.repaint();
+                }
             }
         });
     }

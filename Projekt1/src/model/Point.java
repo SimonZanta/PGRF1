@@ -14,8 +14,8 @@ public class Point {
         this.y = y;
     }
 
-    public void Draw(RasterBI img){
-        img.setColor(this.x, this.y, 0xff00ff);
+    public void Draw(RasterBI img, int color){
+        img.setColor(this.x, this.y, color);
     }
 
     public Optional<Point> getClosestEndpointInRadius(RasterBI img, Liner liner){
