@@ -1,6 +1,4 @@
 package model;
-import model.Point;
-import rasterData.RasterBI;
 
 public class Line {
 

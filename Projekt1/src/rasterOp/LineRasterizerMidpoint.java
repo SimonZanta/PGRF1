@@ -9,6 +9,12 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 public class LineRasterizerMidpoint extends Liner {
+
+    /*
+    * pro rasterizaci úsečky jsem využil Midpoint algoritmu
+    * hlavní výhodou je snadnost implentace a automatická implementace pro všechny kvadrantry
+    * nevýhodou je použití rekurze a oproti Bressenhamovu algoritmu také složitější implementace antialiasing algoritmu
+    */
     public LineRasterizerMidpoint(ArrayList<Line> lines){
         this.lines = lines;
     }

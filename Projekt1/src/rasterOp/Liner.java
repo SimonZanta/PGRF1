@@ -1,9 +1,7 @@
 package rasterOp;
-
 import model.Line;
 import rasterData.RasterBI;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public abstract class Liner {

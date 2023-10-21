@@ -25,8 +25,6 @@ public class Canvas{
     private int startX, startY;
     private Point start;
 
-    int pixelColor = 0xff00ff;
-
     private ArrayList<Line> lines = new ArrayList<>();
 
     boolean editLine = false;
