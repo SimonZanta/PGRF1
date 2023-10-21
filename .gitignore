@@ -3,3 +3,7 @@
 
 # Compiled output files
 out/
+
+# project not included in hometask
+PRGF1/
+seminar2/
