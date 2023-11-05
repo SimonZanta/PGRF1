@@ -3,6 +3,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import rasterOp.LineRasterizerBresenham;
 import rasterOp.LineRasterizerMidpoint;
 import rasterData.RasterBI;
 import model.Point;
@@ -61,7 +62,7 @@ public class Canvas{
         frame.setVisible(true);
         panel.requestFocusInWindow();
 
-        Liner lineRaster = new LineRasterizerMidpoint(lines);
+        Liner lineRaster = new LineRasterizerBresenham();
 
         panel.addKeyListener(new KeyAdapter() {
             @Override
@@ -113,7 +114,7 @@ public class Canvas{
             public void mouseClicked(MouseEvent e){
                 if(createPoligon){
                     img.clear(0x000000);
-                    lineRaster.redrawLines(img);
+                    lineRaster.redrawLines(img, lines);
                     startX = e.getX();
                     startY = e.getY();
 
@@ -160,7 +161,7 @@ public class Canvas{
 
                     lines.add(line);
 
-                    lineRaster.redrawLines(img);
+                    lineRaster.redrawLines(img, lines);
                     polygonRasterizer.drawPolygon(img, polygon);
 
                     panel.repaint();
@@ -187,7 +188,7 @@ public class Canvas{
 
                     lineRaster.drawLine(img, line, 8);
 
-                    lineRaster.redrawLines(img);
+                    lineRaster.redrawLines(img, lines);
                     polygonRasterizer.drawPolygon(img, polygon);
 
                     panel.repaint();

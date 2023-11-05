@@ -32,7 +32,7 @@ public class Point {
 
                 liner.lines.remove(i);
 
-                liner.redrawLines(img);
+                liner.redrawLines(img, liner.lines);
 
                 if(radiusFirst <= 20){
                     return Optional.of(secondPoint);

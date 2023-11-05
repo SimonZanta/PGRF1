@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class PolygonRasterizer{
     ArrayList<Line> lineArray = new ArrayList<>();
-    Liner midpoint = new LineRasterizerMidpoint(lineArray);
+    Liner lineRasterizer = new LineRasterizerBresenham();
 
     public void drawPolygon(RasterBI img, Polygon polygon) {
 
@@ -22,7 +22,7 @@ public class PolygonRasterizer{
             Point pointA = polygon.vertexArray.get(indexA);
             Point pointB = polygon.vertexArray.get(indexB);
 
-            midpoint.drawLine(img, new Line(pointA, pointB), 1);
+            lineRasterizer.drawLine(img, new Line(pointA, pointB), 1);
         }
     }
 }
