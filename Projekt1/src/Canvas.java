@@ -3,6 +3,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import rasterOp.Fill.SeedFill;
 import rasterOp.LineRasterizerBresenham;
 import rasterOp.LineRasterizerMidpoint;
 import rasterData.RasterBI;
@@ -31,6 +32,7 @@ public class Canvas{
     boolean editLine = false;
     boolean snapToGrid = false;
     boolean createPoligon = false;
+    boolean fillPlane = false;
 
     ArrayList<Point> polygonArray = new ArrayList<>();
     Polygon polygon = new Polygon(polygonArray);
@@ -63,6 +65,7 @@ public class Canvas{
         panel.requestFocusInWindow();
 
         Liner lineRaster = new LineRasterizerBresenham();
+        SeedFill seedFill = new SeedFill();
 
         panel.addKeyListener(new KeyAdapter() {
             @Override
@@ -102,6 +105,15 @@ public class Canvas{
                             createPoligon = false;
                         }
                         break;
+                    case KeyEvent.VK_F:
+                        if(fillPlane == false){
+                            System.out.println("fillPlane enabled");
+                            fillPlane = true;
+                        }else{
+                            System.out.println("fillPlane disabled");
+                            fillPlane = false;
+                        }
+                        break;
                 }
             }
         });
@@ -123,6 +135,11 @@ public class Canvas{
                     polygon.addPoint(start);
 
                     polygonRasterizer.drawPolygon(img, polygon);
+                    panel.repaint();
+                }
+                if(fillPlane){
+                    seedFill.fill4(img, panel, new Point(e.getX(), e.getY()));
+
                     panel.repaint();
                 }
             }
