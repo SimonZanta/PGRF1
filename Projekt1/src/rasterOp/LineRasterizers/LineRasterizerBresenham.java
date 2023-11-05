@@ -1,4 +1,4 @@
-package rasterOp;
+package rasterOp.LineRasterizers;
 
 import model.Line;
 import model.Point;
@@ -19,7 +19,7 @@ public class LineRasterizerBresenham extends Liner {
 
     @Override
     public void deleteLine(RasterBI img, Line line) {
-        //TODO
+        bresenhamAlgorithm(img, line, 0xffffff);
     }
 
     public void bresenhamAlgorithm(RasterBI img, Line line, int color){
@@ -31,20 +31,18 @@ public class LineRasterizerBresenham extends Liner {
         //TODO
         // create Line using 4 coordinates
 
-        System.out.println(Math.abs(y2 - y1) < Math.abs(x2 - x1));
-
         if (Math.abs(y2 - y1) < Math.abs(x2 - x1)) {
             if (x1 > x2) {
-                plotLineLow(img, new Line(new Point(x2, y2), new Point(x1, y1)), 0x0000ff);
+                plotLineLow(img, new Line(new Point(x2, y2), new Point(x1, y1)), color);
             } else {
-                plotLineLow(img, new Line(new Point(x1, y1), new Point(x2, y2)), 0x0000ff);
+                plotLineLow(img, new Line(new Point(x1, y1), new Point(x2, y2)), color);
             }
         }
         else{
             if (y1 > y2) {
-                plotLineHigh(img, new Line(new Point(x2, y2), new Point(x1, y1)), 0x0000ff);
+                plotLineHigh(img, new Line(new Point(x2, y2), new Point(x1, y1)), color);
             }else{
-                plotLineHigh(img, new Line(new Point(x1, y1), new Point(x2, y2)), 0x0000ff);
+                plotLineHigh(img, new Line(new Point(x1, y1), new Point(x2, y2)), color);
             }
         }
     }

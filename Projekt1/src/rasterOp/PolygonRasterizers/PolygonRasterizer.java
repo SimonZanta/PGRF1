@@ -1,16 +1,17 @@
-package rasterOp;
+package rasterOp.PolygonRasterizers;
 
 import model.Line;
 import model.Point;
 import model.Polygon;
 import rasterData.RasterBI;
+import rasterOp.LineRasterizers.LineRasterizerBresenham;
+import rasterOp.LineRasterizers.Liner;
 
 import java.util.ArrayList;
 
 public class PolygonRasterizer{
-    ArrayList<Line> lineArray = new ArrayList<>();
-    Liner lineRasterizer = new LineRasterizerBresenham();
 
+    Liner lineRasterizer = new LineRasterizerBresenham();
     public void drawPolygon(RasterBI img, Polygon polygon) {
 
         for (int i = 0; i < polygon.vertexArray.size(); i++) {

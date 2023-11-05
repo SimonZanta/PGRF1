@@ -1,9 +1,7 @@
 package model;
 import rasterData.RasterBI;
-import rasterOp.LineRasterizerMidpoint;
-import rasterOp.Liner;
+import rasterOp.LineRasterizers.Liner;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -18,21 +16,21 @@ public class Point {
         img.setColor(this.x, this.y, color);
     }
 
-    public Optional<Point> getClosestEndpointInRadius(RasterBI img, Liner liner){
+    public Optional<Point> getClosestEndpointInRadius(RasterBI img, Liner liner, ArrayList<Line> lines){
 
-        for(int i = 0; i < liner.lines.size(); i++){
+        for(int i = 0; i < lines.size(); i++){
 
-            double radiusFirst = calculateRadius(liner.lines.get(i).getFirst());
-            double radiusSecond = calculateRadius(liner.lines.get(i).getSecond());
+            double radiusFirst = calculateRadius(lines.get(i).getFirst());
+            double radiusSecond = calculateRadius(lines.get(i).getSecond());
 
-            Point firstPoint = liner.lines.get(i).getFirst();
-            Point secondPoint = liner.lines.get(i).getSecond();
+            Point firstPoint = lines.get(i).getFirst();
+            Point secondPoint = lines.get(i).getSecond();
 
             if(radiusFirst <= 20 || radiusSecond <= 20){
 
-                liner.lines.remove(i);
+                lines.remove(i);
 
-                liner.redrawLines(img, liner.lines);
+                liner.redrawLines(img, lines);
 
                 if(radiusFirst <= 20){
                     return Optional.of(secondPoint);

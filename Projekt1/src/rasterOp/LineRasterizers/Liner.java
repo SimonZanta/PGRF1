@@ -1,4 +1,4 @@
-package rasterOp;
+package rasterOp.LineRasterizers;
 import model.Line;
 import rasterData.RasterBI;
 

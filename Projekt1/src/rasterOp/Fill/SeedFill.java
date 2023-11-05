@@ -1,5 +1,6 @@
 package rasterOp.Fill;
 
+import Utils.ColorUtil;
 import model.Point;
 import rasterData.RasterBI;
 import javax.swing.*;
@@ -9,7 +10,7 @@ public class SeedFill {
 
     //TODO
     // 1. create convertor for colors
-    public void fill4(RasterBI img, JPanel panel, Point point){
+    public void fill4(RasterBI img, JPanel panel, Point point, int colorFill){
 
         int x = point.x;
         int y = point.y;
@@ -18,13 +19,13 @@ public class SeedFill {
         if(color.isPresent()) {
             String colorString = Integer.toHexString(color.get());
             if(colorString.equals("ff000000") && !colorString.equals("ff00ff00") && !colorString.equals("ffff0000")){
-                point.Draw(img, 0x00ff00);
+                point.Draw(img, colorFill);
                 panel.repaint();
 
-                fill4(img, panel, new Point(x+1, y));
-                fill4(img, panel, new Point(x-1, y));
-                fill4(img, panel, new Point(x, y+1));
-                fill4(img, panel, new Point(x, y-1));
+                fill4(img, panel, new Point(x+1, y), colorFill);
+                fill4(img, panel, new Point(x-1, y), colorFill);
+                fill4(img, panel, new Point(x, y+1), colorFill);
+                fill4(img, panel, new Point(x, y-1), colorFill);
 
             }
         }

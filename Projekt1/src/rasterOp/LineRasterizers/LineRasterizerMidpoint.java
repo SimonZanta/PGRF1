@@ -1,11 +1,9 @@
-package rasterOp;
+package rasterOp.LineRasterizers;
 
 import model.Line;
 import model.Point;
 import rasterData.RasterBI;
-import rasterOp.Liner;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class LineRasterizerMidpoint extends Liner {
