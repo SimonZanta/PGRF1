@@ -9,12 +9,18 @@ public class Line {
         second =  new Point(point2.x, point2.y);
     }
 
+    public Line(int x1, int y1, int x2, int y2){
+        first =  new Point(x1, y1);
+        second =  new Point(x2, y2);
+    }
+
     public Point getFirst() {
         return first;
     }
     public Point getSecond() {
         return second;
     }
+
 
     public Point returnAngledPoint() {
         int x1 = this.getFirst().x;
