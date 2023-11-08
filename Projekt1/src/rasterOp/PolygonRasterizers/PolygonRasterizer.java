@@ -9,10 +9,10 @@ import rasterOp.LineRasterizers.Liner;
 
 import java.util.ArrayList;
 
-public class PolygonRasterizer{
+public class PolygonRasterizer implements Polygoner{
 
     Liner lineRasterizer = new LineRasterizerBresenham();
-    public void drawPolygon(RasterBI img, Polygon polygon) {
+    public void draw(RasterBI img, Polygon polygon) {
 
         for (int i = 0; i < polygon.vertexArray.size(); i++) {
             int indexA = i;
@@ -25,5 +25,10 @@ public class PolygonRasterizer{
 
             lineRasterizer.drawLine(img, new Line(pointA, pointB), 1);
         }
+    }
+
+    @Override
+    public void redrawAll(RasterBI img, ArrayList<Polygon> Polygones) {
+
     }
 }

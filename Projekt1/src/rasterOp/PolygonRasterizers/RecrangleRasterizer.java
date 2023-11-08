@@ -7,11 +7,13 @@ import rasterData.RasterBI;
 import rasterOp.LineRasterizers.LineRasterizerBresenham;
 import rasterOp.LineRasterizers.Liner;
 
-public class RecrangleRasterizer {
+import java.util.ArrayList;
+
+public class RecrangleRasterizer implements Polygoner {
 
     Liner lineRasterizer = new LineRasterizerBresenham();
 
-    public void drawRectangle(RasterBI img, Polygon polygon){
+    public void draw(RasterBI img, Polygon polygon){
         int x1 = polygon.vertexArray.get(0).x;
         int y1 = polygon.vertexArray.get(0).y;
         int x2 = polygon.vertexArray.get(1).x;
@@ -28,4 +30,12 @@ public class RecrangleRasterizer {
         lineRasterizer.drawLine(img, line4);
 
     }
+
+    @Override
+    public void redrawAll(RasterBI img, ArrayList<Polygon> Polygones) {
+        for(int i = 0; i < Polygones.size(); i++){
+            draw(img, Polygones.get(i));
+        }
+    }
+
 }

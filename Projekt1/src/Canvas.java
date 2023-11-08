@@ -1,6 +1,5 @@
 import Utils.BooleanUtil;
 import Utils.ButtonUtil;
-import Utils.ColorUtil;
 import model.Line;
 import model.Point;
 import model.Polygon;
@@ -23,21 +22,40 @@ import java.util.Optional;
 
 public class Canvas {
 
+    // panel global variables
     private final JPanel panel;
     private final RasterBI img;
-    private final ArrayList<Line> lines = new ArrayList<>();
+
+
+    // button variables
+    ButtonUtil buttonUtil = new ButtonUtil();
+    BooleanUtil booleanUtil = new BooleanUtil();
     boolean editLine = false;
     boolean snapToGrid = false;
     boolean createPoligon = false;
     boolean fillPlane = false;
     boolean createRectangle = false;
-    ArrayList<Point> polygonArray = new ArrayList<>();
-    ArrayList<Point> rectangleArray = new ArrayList<>();
-    Polygon polygon = new Polygon(polygonArray);
-    BooleanUtil booleanUtil = new BooleanUtil();
-    ButtonUtil buttonUtil = new ButtonUtil();
-    private int startX, startY;
+
+
+    // line variables
     private Point start;
+    private int lineStartX, lineStartY;
+    private final ArrayList<Line> lines = new ArrayList<>();
+
+
+    // polygon variables
+    ArrayList<Point> polygonArray = new ArrayList<>();
+    Polygon polygon = new Polygon(polygonArray);
+
+
+    // rectangle variables
+    private final ArrayList<Polygon> rectangles = new ArrayList<>();
+    private Point rectangleStart;
+    private int rectangleCounter = 0;
+
+
+    // elipse variables
+
 
     public Canvas(int width, int height) {
         JFrame frame = new JFrame();
@@ -48,7 +66,7 @@ public class Canvas {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
-        // set pixel settings, witdth, height and rgb
+        // RBI inicialization - set draw plane width and height
         img = new RasterBI(width - 150, height);
 
         panel = new JPanel() {
@@ -70,6 +88,8 @@ public class Canvas {
         frame.setVisible(true);
         panel.requestFocusInWindow();
 
+
+        // rasterizes inicialization - needs to be after RBI inicialization
         Liner lineRaster = new LineRasterizerBresenham();
         SeedFill seedFill = new SeedFill();
 
@@ -99,7 +119,7 @@ public class Canvas {
 
         snapButton.addActionListener(e -> snapToGrid = booleanUtil.switchValue(snapToGrid));
 
-        rectangleButton.addActionListener(e -> createRectangle = booleanUtil.switchValue(createRectangle));
+        rectangleButton.addActionListener(e -> {createRectangle = true; rectangleCounter = 0;});
 
         poligonButton.addActionListener(e -> {
             createPoligon = booleanUtil.switchValue(createPoligon);
@@ -112,7 +132,10 @@ public class Canvas {
         });
 
         PolygonRasterizer polygonRasterizer = new PolygonRasterizer();
+        RecrangleRasterizer recrangleRasterizer = new RecrangleRasterizer();
 
+
+        // panel listeners
         panel.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -120,14 +143,14 @@ public class Canvas {
                 if (createPoligon) {
                     img.clear(0x000000);
                     lineRaster.redrawLines(img, lines);
-                    startX = e.getX();
-                    startY = e.getY();
+                    lineStartX = e.getX();
+                    lineStartY = e.getY();
 
-                    start = new Point(startX, startY);
+                    start = new Point(lineStartX, lineStartY);
 
                     polygon.addPoint(start);
 
-                    polygonRasterizer.drawPolygon(img, polygon);
+                    polygonRasterizer.draw(img, polygon);
                     panel.repaint();
                 }
                 if (fillPlane) {
@@ -141,21 +164,32 @@ public class Canvas {
                     panel.repaint();
                 }
                 if(createRectangle){
-                    rectangleArray.add(new Point(e.getX(), e.getY()));
 
-                    if(rectangleArray.size() == 2){
-                        RecrangleRasterizer rectangle = new RecrangleRasterizer();
-                        rectangle.drawRectangle(img, new Polygon(rectangleArray));
+                    if(rectangleCounter == 0){
+                        rectangleStart = new Point(e.getX(), e.getY());
+                        rectangleCounter++;
+                    }else if(rectangleCounter == 1){
+                       Point rectangleEnd = new Point(e.getX(), e.getY());
+                       ArrayList<Point> rectangleArray = new ArrayList<>();
+                       rectangleArray.add(rectangleStart);
+                       rectangleArray.add(rectangleEnd);
+                       Polygon rectangle = new Polygon(rectangleArray);
+
+                       rectangles.add(rectangle);
+                       rectangleCounter = 0;
                     }
+
+                    recrangleRasterizer.redrawAll(img, rectangles);
+                    panel.repaint();
                 }
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                startX = e.getX();
-                startY = e.getY();
+                lineStartX = e.getX();
+                lineStartY = e.getY();
 
-                start = new Point(startX, startY);
+                start = new Point(lineStartX, lineStartY);
 
                 if (editLine) {
                     Optional<Point> point = start.getClosestEndpointInRadius(img, lineRaster, lines);
@@ -185,7 +219,8 @@ public class Canvas {
                     lines.add(line);
 
                     lineRaster.redrawLines(img, lines);
-                    polygonRasterizer.drawPolygon(img, polygon);
+                    polygonRasterizer.draw(img, polygon);
+                    recrangleRasterizer.redrawAll(img, rectangles);
 
                     panel.repaint();
                 }
@@ -209,7 +244,8 @@ public class Canvas {
                     lineRaster.drawLine(img, line, 8);
 
                     lineRaster.redrawLines(img, lines);
-                    polygonRasterizer.drawPolygon(img, polygon);
+                    polygonRasterizer.draw(img, polygon);
+                    recrangleRasterizer.redrawAll(img, rectangles);
 
                     panel.repaint();
                 }
