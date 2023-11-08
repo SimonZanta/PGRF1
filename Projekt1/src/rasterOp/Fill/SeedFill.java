@@ -9,8 +9,8 @@ import java.util.Optional;
 public class SeedFill {
 
     //TODO
-    // 1. create convertor for colors
-    public void fill4(RasterBI img, JPanel panel, Point point, int colorFill){
+    // 1. implement convertor for colors
+    public void fill(RasterBI img, JPanel panel, Point point, int colorFill){
 
         int x = point.x;
         int y = point.y;
@@ -22,10 +22,10 @@ public class SeedFill {
                 point.Draw(img, colorFill);
                 panel.repaint();
 
-                fill4(img, panel, new Point(x+1, y), colorFill);
-                fill4(img, panel, new Point(x-1, y), colorFill);
-                fill4(img, panel, new Point(x, y+1), colorFill);
-                fill4(img, panel, new Point(x, y-1), colorFill);
+                fill(img, panel, new Point(x+1, y), colorFill);
+                fill(img, panel, new Point(x-1, y), colorFill);
+                fill(img, panel, new Point(x, y+1), colorFill);
+                fill(img, panel, new Point(x, y-1), colorFill);
 
             }
         }

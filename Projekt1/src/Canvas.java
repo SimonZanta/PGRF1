@@ -5,10 +5,12 @@ import model.Line;
 import model.Point;
 import model.Polygon;
 import rasterData.RasterBI;
+import rasterOp.Fill.ScanLine;
 import rasterOp.Fill.SeedFill;
 import rasterOp.LineRasterizers.LineRasterizerBresenham;
 import rasterOp.LineRasterizers.Liner;
 import rasterOp.PolygonRasterizers.PolygonRasterizer;
+import rasterOp.PolygonRasterizers.RecrangleRasterizer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +30,9 @@ public class Canvas {
     boolean snapToGrid = false;
     boolean createPoligon = false;
     boolean fillPlane = false;
+    boolean createRectangle = false;
     ArrayList<Point> polygonArray = new ArrayList<>();
+    ArrayList<Point> rectangleArray = new ArrayList<>();
     Polygon polygon = new Polygon(polygonArray);
     BooleanUtil booleanUtil = new BooleanUtil();
     ButtonUtil buttonUtil = new ButtonUtil();
@@ -75,12 +79,14 @@ public class Canvas {
         JButton snapButton = buttonUtil.createNewButton("snap tool", width, 20);
         JButton poligonButton = buttonUtil.createNewButton("poligon", width, 20);
         JButton fillButton = buttonUtil.createNewButton("fill", width, 20);
+        JButton rectangleButton = buttonUtil.createNewButton("rectangle", width, 20);
 
         panel.add(clearButton);
         panel.add(editLineButton);
         panel.add(snapButton);
         panel.add(poligonButton);
         panel.add(fillButton);
+        panel.add(rectangleButton);
 
         clearButton.addActionListener(e -> {
             img.clear(0x000000);
@@ -89,9 +95,11 @@ public class Canvas {
             polygonArray.clear();
         });
 
-        editLineButton.addActionListener(e -> editLine = !editLine);
+        editLineButton.addActionListener(e -> editLine = booleanUtil.switchValue(editLine));
 
         snapButton.addActionListener(e -> snapToGrid = booleanUtil.switchValue(snapToGrid));
+
+        rectangleButton.addActionListener(e -> createRectangle = booleanUtil.switchValue(createRectangle));
 
         poligonButton.addActionListener(e -> {
             createPoligon = booleanUtil.switchValue(createPoligon);
@@ -123,12 +131,22 @@ public class Canvas {
                     panel.repaint();
                 }
                 if (fillPlane) {
-                    ColorUtil colorUtil = new ColorUtil();
-                    int randomColor = colorUtil.getRandomColor();
+                    /*ColorUtil colorUtil = new ColorUtil();
+                    int randomColor = colorUtil.getRandomColor();*/
+                    ScanLine scanLine = new ScanLine(polygonArray);
+                    scanLine.fill(img);
 
-                    seedFill.fill4(img, panel, new Point(e.getX(), e.getY()), randomColor);
+                    /*seedFill.fill(img, panel, new Point(e.getX(), e.getY()), randomColor);*/
 
                     panel.repaint();
+                }
+                if(createRectangle){
+                    rectangleArray.add(new Point(e.getX(), e.getY()));
+
+                    if(rectangleArray.size() == 2){
+                        RecrangleRasterizer rectangle = new RecrangleRasterizer();
+                        rectangle.drawRectangle(img, new Polygon(rectangleArray));
+                    }
                 }
             }
 
