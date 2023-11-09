@@ -8,8 +8,17 @@ import java.util.ArrayList;
 public class ElipseRasterizer implements Polygoner{
     @Override
     public void draw(RasterBI img, Polygon polygon) {
+        int circleStartX = polygon.vertexArray.get(0).x;
+        int circleStartY = polygon.vertexArray.get(0).y;
+        int circleRX = polygon.vertexArray.get(0).x;
+        int circleRY = 45;
+        int step = 15;
 
-
+        for(int theta = 0; theta < 360; theta = theta + step){
+            double x = circleStartX + circleRX * Math.cos(theta);
+            double y = circleStartY - circleRY * Math.sin(theta);
+            img.setColor((int)x, (int)y, 0xf0f0f0);
+        }
     }
 
     @Override
@@ -17,24 +26,17 @@ public class ElipseRasterizer implements Polygoner{
 
     }
 
-    public static void drawTest(){
-        // a = 5
-        // b = 5
-        //x = sqrt(a^2 * (1 - (y^2) / b^2))
+    public void drawTest(RasterBI img, int startX, int starY){
+        int circleStartX = startX;
+        int circleStartY = starY;
+        int circleRX = 50;
+        int circleRY = 25;
+        int step = 1;
 
-        int a = 5;
-        int b = 5;
-        int y = b*2;
-
-        for(int i = 0; i < y; i++){
-            double x = Math.sqrt(1-i);
-            System.out.println(x + " " + i);
+        for(int theta = 0; theta < 360; theta = theta + step){
+            double x = circleStartX + circleRX * Math.cos(theta);
+            double y = circleStartY - circleRY * Math.sin(theta);
+            img.setColor((int)x, (int)y, 0xf0f0f0);
         }
-
-
-    }
-
-    public static void main(String[] args){
-        drawTest();
     }
 }

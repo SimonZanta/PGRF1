@@ -8,6 +8,7 @@ import rasterOp.Fill.ScanLine;
 import rasterOp.Fill.SeedFill;
 import rasterOp.LineRasterizers.LineRasterizerBresenham;
 import rasterOp.LineRasterizers.Liner;
+import rasterOp.PolygonRasterizers.ElipseRasterizer;
 import rasterOp.PolygonRasterizers.PolygonRasterizer;
 import rasterOp.PolygonRasterizers.RecrangleRasterizer;
 
@@ -140,6 +141,8 @@ public class Canvas {
 
             @Override
             public void mouseClicked(MouseEvent e) {
+                ElipseRasterizer elipseRasterizer = new ElipseRasterizer();
+                elipseRasterizer.drawTest(img, e.getX(), e.getY());
                 if (createPoligon) {
                     img.clear(0x000000);
                     lineRaster.redrawLines(img, lines);
