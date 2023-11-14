@@ -1,11 +1,13 @@
 package rasterOp.PolygonRasterizers;
 
+import model.Point;
 import model.Polygon;
 import rasterData.RasterBI;
 
 import java.util.ArrayList;
 
 public class ElipseRasterizer implements Polygoner{
+
     @Override
     public void draw(RasterBI img, Polygon polygon) {
         int circleStartX = polygon.vertexArray.get(0).x;
@@ -22,18 +24,33 @@ public class ElipseRasterizer implements Polygoner{
     }
 
     @Override
-    public void redrawAll(RasterBI img, ArrayList<Polygon> Polygones) {
-
+    public void redrawAll(RasterBI img, ArrayList<Polygon> elipses) {
+        for(int elipse = 0; elipse < elipses.size(); elipse++){
+            //step at 0.04 is the highest step that makes elipse border continuous
+            drawTest(img, elipses.get(elipse), 0.04);
+        }
     }
 
-    public void drawTest(RasterBI img, int startX, int starY){
-        int circleStartX = startX;
-        int circleStartY = starY;
-        int circleRX = 50;
-        int circleRY = 25;
-        int step = 1;
+    public void drawTest(RasterBI img, Polygon elipse, double step){
 
-        for(int theta = 0; theta < 360; theta = theta + step){
+        int x1 = elipse.vertexArray.get(0).x;
+        int y1 = elipse.vertexArray.get(0).y;
+        int x2 = elipse.vertexArray.get(1).x;
+        int y2 = elipse.vertexArray.get(1).y;
+
+        int width = (x2 - x1)/2;
+        int height = (y2 - y1)/2;
+
+        int xCenter = x2 - width;
+        int yCenter = y2 - height;
+
+
+        int circleStartX = xCenter;
+        int circleStartY = yCenter;
+        int circleRX = width;
+        int circleRY = height;
+
+        for(double theta = 0; theta < 360; theta = theta + step){
             double x = circleStartX + circleRX * Math.cos(theta);
             double y = circleStartY - circleRY * Math.sin(theta);
             img.setColor((int)x, (int)y, 0xf0f0f0);
