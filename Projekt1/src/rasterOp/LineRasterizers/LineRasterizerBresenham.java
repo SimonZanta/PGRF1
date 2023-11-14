@@ -9,20 +9,20 @@ public class LineRasterizerBresenham extends Liner {
     public void drawLine(RasterBI img, Line line, int dotSize) {
         //TODO
 
-        bresenhamAlgorithm(img, line, 0xff00ff);
+        bresenhamAlgorithm(img, line, 0xff00ff, dotSize);
     }
 
     @Override
     public void drawLine(RasterBI img, Line line) {
-        bresenhamAlgorithm(img, line, 0xff00ff);
+        bresenhamAlgorithm(img, line, 0xff00ff, 1);
     }
 
     @Override
     public void deleteLine(RasterBI img, Line line) {
-        bresenhamAlgorithm(img, line, 0xffffff);
+        bresenhamAlgorithm(img, line, 0xffffff, 1);
     }
 
-    public void bresenhamAlgorithm(RasterBI img, Line line, int color){
+    public void bresenhamAlgorithm(RasterBI img, Line line, int color, int gapSize){
         int x1 = line.getFirst().x;
         int x2 = line.getSecond().x;
         int y1 = line.getFirst().y;
@@ -33,21 +33,21 @@ public class LineRasterizerBresenham extends Liner {
 
         if (Math.abs(y2 - y1) < Math.abs(x2 - x1)) {
             if (x1 > x2) {
-                plotLineLow(img, new Line(new Point(x2, y2), new Point(x1, y1)), color);
+                plotLineLow(img, new Line(new Point(x2, y2), new Point(x1, y1)), color, gapSize);
             } else {
-                plotLineLow(img, new Line(new Point(x1, y1), new Point(x2, y2)), color);
+                plotLineLow(img, new Line(new Point(x1, y1), new Point(x2, y2)), color, gapSize);
             }
         }
         else{
             if (y1 > y2) {
-                plotLineHigh(img, new Line(new Point(x2, y2), new Point(x1, y1)), color);
+                plotLineHigh(img, new Line(new Point(x2, y2), new Point(x1, y1)), color, gapSize);
             }else{
-                plotLineHigh(img, new Line(new Point(x1, y1), new Point(x2, y2)), color);
+                plotLineHigh(img, new Line(new Point(x1, y1), new Point(x2, y2)), color, gapSize);
             }
         }
     }
 
-    public void plotLineLow(RasterBI img, Line line, int color) {
+    public void plotLineLow(RasterBI img, Line line, int color, int gapSize) {
         int x1 = line.getFirst().x;
         int x2 = line.getSecond().x;
         int y1 = line.getFirst().y;
@@ -67,8 +67,10 @@ public class LineRasterizerBresenham extends Liner {
         int y = y1;
 
         for(int x = x1; x < x2; x++){
-            Point pixel = new Point(x, y);
-            pixel.Draw(img, color);
+            if(x % gapSize == 0){
+                Point pixel = new Point(x, y);
+                pixel.Draw(img, color);
+            }
 
             if (D > 0){
                 y = y + yi;
@@ -79,7 +81,7 @@ public class LineRasterizerBresenham extends Liner {
         }
     }
 
-    public void plotLineHigh(RasterBI img, Line line, int color) {
+    public void plotLineHigh(RasterBI img, Line line, int color, int gapSize) {
         int x1 = line.getFirst().x;
         int x2 = line.getSecond().x;
         int y1 = line.getFirst().y;
@@ -98,8 +100,11 @@ public class LineRasterizerBresenham extends Liner {
         int x = x1;
 
         for (int y = y1; y < y2; y++){
-            Point pixel = new Point(x, y);
-            pixel.Draw(img, color);
+
+            if(y % gapSize == 0){
+                Point pixel = new Point(x, y);
+                pixel.Draw(img, color);
+            }
 
             if (D > 0){
                 x = x + xi;
