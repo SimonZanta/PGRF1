@@ -32,10 +32,12 @@ public class Canvas {
     ButtonUtil buttonUtil = new ButtonUtil();
     BooleanUtil booleanUtil = new BooleanUtil();
     boolean editLine = false;
+    boolean createLine = false;
     boolean snapToGrid = false;
     boolean createPoligon = false;
     boolean fillPlane = false;
     boolean createRectangle = false;
+    boolean createElipse = false;
 
 
     // line variables
@@ -56,7 +58,8 @@ public class Canvas {
 
 
     // elipse variables
-
+    private Point elipseStart;
+    private final ArrayList<Polygon> elipses = new ArrayList<>();
 
     public Canvas(int width, int height) {
         JFrame frame = new JFrame();
@@ -96,24 +99,30 @@ public class Canvas {
 
         //inicializing all buttons
         JButton clearButton = buttonUtil.createNewButton("clear", width, 20);
+        JButton lineButton = buttonUtil.createNewButton("line", width, 20);
         JButton editLineButton = buttonUtil.createNewButton("edit line", width, 20);
         JButton snapButton = buttonUtil.createNewButton("snap tool", width, 20);
         JButton poligonButton = buttonUtil.createNewButton("poligon", width, 20);
         JButton fillButton = buttonUtil.createNewButton("fill", width, 20);
         JButton rectangleButton = buttonUtil.createNewButton("rectangle", width, 20);
+        JButton elipseButton = buttonUtil.createNewButton("elipse", width, 20);
 
         panel.add(clearButton);
+        panel.add(lineButton);
         panel.add(editLineButton);
         panel.add(snapButton);
         panel.add(poligonButton);
         panel.add(fillButton);
         panel.add(rectangleButton);
+        panel.add(elipseButton);
 
         clearButton.addActionListener(e -> {
             img.clear(0x000000);
             panel.repaint();
             lines.clear();
             polygonArray.clear();
+            elipses.clear();
+            rectangles.clear();
         });
 
         editLineButton.addActionListener(e -> editLine = booleanUtil.switchValue(editLine));
@@ -121,6 +130,10 @@ public class Canvas {
         snapButton.addActionListener(e -> snapToGrid = booleanUtil.switchValue(snapToGrid));
 
         rectangleButton.addActionListener(e -> {createRectangle = true; rectangleCounter = 0;});
+
+        elipseButton.addActionListener(e -> createElipse = true);
+
+        lineButton.addActionListener(e -> createLine = true);
 
         poligonButton.addActionListener(e -> {
             createPoligon = booleanUtil.switchValue(createPoligon);
@@ -134,16 +147,14 @@ public class Canvas {
 
         PolygonRasterizer polygonRasterizer = new PolygonRasterizer();
         RecrangleRasterizer recrangleRasterizer = new RecrangleRasterizer();
-
+        ElipseRasterizer elipseRasterizer = new ElipseRasterizer();
 
         // panel listeners
         panel.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                ElipseRasterizer elipseRasterizer = new ElipseRasterizer();
-                elipseRasterizer.drawTest(img, e.getX(), e.getY());
-                if (createPoligon) {
+                if(createPoligon) {
                     img.clear(0x000000);
                     lineRaster.redrawLines(img, lines);
                     lineStartX = e.getX();
@@ -155,8 +166,7 @@ public class Canvas {
 
                     polygonRasterizer.draw(img, polygon);
                     panel.repaint();
-                }
-                if (fillPlane) {
+                } else if (fillPlane) {
                     /*ColorUtil colorUtil = new ColorUtil();
                     int randomColor = colorUtil.getRandomColor();*/
                     ScanLine scanLine = new ScanLine(polygonArray);
@@ -185,16 +195,20 @@ public class Canvas {
                     recrangleRasterizer.redrawAll(img, rectangles);
                     panel.repaint();
                 }
+
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                lineStartX = e.getX();
-                lineStartY = e.getY();
 
-                start = new Point(lineStartX, lineStartY);
+                if(createLine){
+                    lineStartX = e.getX();
+                    lineStartY = e.getY();
 
-                if (editLine) {
+                    start = new Point(lineStartX, lineStartY);
+                }
+
+                if(editLine) {
                     Optional<Point> point = start.getClosestEndpointInRadius(img, lineRaster, lines);
 
                     if (point.isPresent()) {
@@ -206,11 +220,15 @@ public class Canvas {
                         start = new Point(x, y);
                     }
                 }
+
+                if(createElipse){
+                    elipseStart = new Point(e.getX(), e.getY());
+                }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (!createPoligon) {
+                if(createLine) {
                     Point end = new Point(e.getX(), e.getY());
                     Line line = new Line(start, end);
 
@@ -227,6 +245,22 @@ public class Canvas {
 
                     panel.repaint();
                 }
+
+                if(createElipse){
+
+                    Point elipseEnd = new Point(e.getX(), e.getY());
+
+                    ArrayList<Point> elipsePoints = new ArrayList<>();
+                    elipsePoints.add(elipseStart);
+                    elipsePoints.add(elipseEnd);
+
+                    Polygon elipsePolygon = new Polygon(elipsePoints);
+
+                    elipses.add(elipsePolygon);
+
+                    elipseRasterizer.redrawAll(img, elipses);
+                    panel.repaint();
+                }
             }
         });
 
@@ -234,7 +268,7 @@ public class Canvas {
             @Override
             public void mouseDragged(MouseEvent e) {
 
-                if (!createPoligon) {
+                if(createLine) {
                     img.clear(0x000000);
                     Point end = new Point(e.getX(), e.getY());
                     Line line = new Line(start, end);
@@ -245,13 +279,27 @@ public class Canvas {
                     }
 
                     lineRaster.drawLine(img, line, 8);
-
-                    lineRaster.redrawLines(img, lines);
-                    polygonRasterizer.draw(img, polygon);
-                    recrangleRasterizer.redrawAll(img, rectangles);
-
-                    panel.repaint();
                 }
+
+                if(createElipse){
+                    img.clear(0x000000);
+                    Point elipseEnd = new Point(e.getX(), e.getY());
+
+                    ArrayList<Point> elipsePoints = new ArrayList<>();
+                    elipsePoints.add(elipseStart);
+                    elipsePoints.add(elipseEnd);
+
+                    Polygon elipsePolygon = new Polygon(elipsePoints);
+
+                    elipseRasterizer.drawTest(img, elipsePolygon, 3.0);
+                }
+
+                lineRaster.redrawLines(img, lines);
+                polygonRasterizer.draw(img, polygon);
+                recrangleRasterizer.redrawAll(img, rectangles);
+                elipseRasterizer.redrawAll(img, elipses);
+
+                panel.repaint();
             }
         });
     }
