@@ -16,8 +16,6 @@ public class ScanLine {
     public ScanLine(ArrayList<Point> polygonArray){
         this.polygonArray = polygonArray;
     }
-
-    //RasterBI img, JPanel panel, Point point, int colorFill
     public void fill(RasterBI img){
 
         ArrayList<Line> polygonLineArray = new ArrayList<>();
@@ -45,18 +43,23 @@ public class ScanLine {
         int ymin = polygonLineArray.get(0).getSecond().y;
 
         for(int i = 0; i < polygonLineArray.size(); i++){
+
+            // putting ymax if actual value is smaller than ymax
             if(polygonLineArray.get(i).getFirst().y < ymax){
                 ymax = polygonLineArray.get(i).getFirst().y;
             }
 
+            // putting ymin if actual value is bigger than ymin
             if(polygonLineArray.get(i).getSecond().y > ymin){
                 ymin = polygonLineArray.get(i).getSecond().y;
             }
         }
 
-        ArrayList<Point> intersections = new ArrayList<>();
-        // find intersect using raycast algorithm
+
+        ArrayList<Integer> intersections = new ArrayList<>();
+
         for(int y = ymax; y < ymin; y++) {
+            intersections.clear();
             for (int edge = 0; edge < polygonLineArray.size(); edge++) {
 
                 int x1 = polygonLineArray.get(edge).getFirst().x;
@@ -64,34 +67,25 @@ public class ScanLine {
                 int x2 = polygonLineArray.get(edge).getSecond().x;
                 int y2 = polygonLineArray.get(edge).getSecond().y;
 
+                //calculating intersection using trivial algorithm
                 if(y > y1 && y < y2){
                     double k = ((double) (x2 - x1)) / ((y2 - y1));
                     double q = x1 - k * y1;
 
                     int x = (int) Math.round(k * y + q);
-                    intersections.add(new Point(x, y));
+                    intersections.add(x);
+                }
+            }
+
+            //sorting intersections in ascending order
+            CalcUtils.BubbleSort(intersections);
+
+            //drawing even intersections
+            for (int i = 0; i < intersections.size(); i = i + 2) {
+                if (intersections.size() > i + 1) {
+                    liner.drawLine(img, new Line(new Point(intersections.get(i), y), new Point(intersections.get(i + 1), y)));
                 }
             }
         }
-
-        for (int i = 0; i < intersections.size(); i = i + 2) {
-                liner.drawLine(img, new Line(intersections.get(i), intersections.get(i+1)));
-        }
-    }
-
-    public static void main(String[] args){
-
-        int[] numbers = {72, 43, 68, 27, 61, 84, 92, 34, 56, 21, 97, 38, 95, 20, 5, 47};
-        /*int[] numbers = {5,1,2,5};*/
-
-        ArrayList<Point> pointArray = new ArrayList<>();
-
-        for(int i = 0; i < numbers.length;  i = i + 2){
-            pointArray.add(new Point(numbers[i], numbers[i+1]));
-        }
-
-        ScanLine scanLine = new ScanLine(pointArray);
-
-        /*scanLine.fill(img);*/
     }
 }
