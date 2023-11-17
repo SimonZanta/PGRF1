@@ -1,5 +1,6 @@
 import Utils.BooleanUtil;
 import Utils.ButtonUtil;
+import Utils.ColorUtil;
 import model.Line;
 import model.Point;
 import model.Polygon;
@@ -166,15 +167,6 @@ public class Canvas {
 
                     polygonRasterizer.draw(img, polygon);
                     panel.repaint();
-                } else if (fillPlane) {
-                    /*ColorUtil colorUtil = new ColorUtil();
-                    int randomColor = colorUtil.getRandomColor();*/
-                    ScanLine scanLine = new ScanLine(polygonArray);
-                    scanLine.fill(img);
-
-                    /*seedFill.fill(img, panel, new Point(e.getX(), e.getY()), randomColor);*/
-
-                    panel.repaint();
                 }
                 if(createRectangle){
 
@@ -192,7 +184,28 @@ public class Canvas {
                        rectangleCounter = 0;
                     }
 
+                    if(fillPlane){
+                        ColorUtil colorUtil = new ColorUtil();
+                        int randomColor = colorUtil.getRandomColor();
+                        ScanLine scanLine = new ScanLine(RecrangleRasterizer.convertToPointArray(rectangles.get(rectangles.size()-1)));
+                        scanLine.fill(img);
+                        recrangleRasterizer.redrawAll(img, rectangles);
+                        panel.repaint();
+                    }
+
                     recrangleRasterizer.redrawAll(img, rectangles);
+                    panel.repaint();
+
+                }
+
+                if (fillPlane && !createRectangle) {
+                    ColorUtil colorUtil = new ColorUtil();
+                    int randomColor = colorUtil.getRandomColor();
+                    ScanLine scanLine = new ScanLine(polygonArray);
+                    scanLine.fill(img);
+
+                    /*seedFill.fill(img, panel, new Point(e.getX(), e.getY()));*/
+
                     panel.repaint();
                 }
 
@@ -304,8 +317,12 @@ public class Canvas {
         });
     }
 
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Canvas(800, 600));
+    }*/
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new Canvas(1920, 1000));
     }
 
 }

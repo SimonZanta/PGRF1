@@ -13,4 +13,8 @@ public class Polygon {
     public void addPoint(Point point){
         vertexArray.add(point);
     }
+
+    public int getSize(){
+        return this.vertexArray.size();
+    }
 }

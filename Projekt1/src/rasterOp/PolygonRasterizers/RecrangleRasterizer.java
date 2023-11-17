@@ -31,6 +31,22 @@ public class RecrangleRasterizer implements Polygoner {
 
     }
 
+    public static ArrayList<Point> convertToPointArray(Polygon polygon){
+
+        ArrayList<Point> output = new ArrayList<>();
+        int x1 = polygon.vertexArray.get(0).x;
+        int y1 = polygon.vertexArray.get(0).y;
+        int x2 = polygon.vertexArray.get(1).x;
+        int y2 = polygon.vertexArray.get(1).y;
+
+        output.add(new Point(x1,y1));
+        output.add(new Point(x2, y1));
+        output.add(new Point(x2,y2));
+        output.add(new Point(x1, y2));
+
+        return output;
+    }
+
     @Override
     public void redrawAll(RasterBI img, ArrayList<Polygon> Polygones) {
         for(int i = 0; i < Polygones.size(); i++){
