@@ -7,7 +7,6 @@ import rasterData.RasterBI;
 import rasterOp.LineRasterizers.LineRasterizerBresenham;
 import rasterOp.LineRasterizers.Liner;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class ScanLine {
@@ -39,19 +38,19 @@ public class ScanLine {
         }
 
         // searching for ymax and ymin
-        int ymax = polygonLineArray.get(0).getFirst().y;
-        int ymin = polygonLineArray.get(0).getSecond().y;
+        int ymax = polygonLineArray.get(0).getStart().y;
+        int ymin = polygonLineArray.get(0).getEnd().y;
 
         for(int i = 0; i < polygonLineArray.size(); i++){
 
             // putting ymax if actual value is smaller than ymax
-            if(polygonLineArray.get(i).getFirst().y < ymax){
-                ymax = polygonLineArray.get(i).getFirst().y;
+            if(polygonLineArray.get(i).getStart().y < ymax){
+                ymax = polygonLineArray.get(i).getStart().y;
             }
 
             // putting ymin if actual value is bigger than ymin
-            if(polygonLineArray.get(i).getSecond().y > ymin){
-                ymin = polygonLineArray.get(i).getSecond().y;
+            if(polygonLineArray.get(i).getEnd().y > ymin){
+                ymin = polygonLineArray.get(i).getEnd().y;
             }
         }
 
@@ -62,10 +61,10 @@ public class ScanLine {
             intersections.clear();
             for (int edge = 0; edge < polygonLineArray.size(); edge++) {
 
-                int x1 = polygonLineArray.get(edge).getFirst().x;
-                int y1 = polygonLineArray.get(edge).getFirst().y;
-                int x2 = polygonLineArray.get(edge).getSecond().x;
-                int y2 = polygonLineArray.get(edge).getSecond().y;
+                int x1 = polygonLineArray.get(edge).getStart().x;
+                int y1 = polygonLineArray.get(edge).getStart().y;
+                int x2 = polygonLineArray.get(edge).getEnd().x;
+                int y2 = polygonLineArray.get(edge).getEnd().y;
 
                 //calculating intersection using trivial algorithm
                 if(y > y1 && y < y2){

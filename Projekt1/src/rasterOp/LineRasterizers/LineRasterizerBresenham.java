@@ -23,10 +23,10 @@ public class LineRasterizerBresenham extends Liner {
     }
 
     public void bresenhamAlgorithm(RasterBI img, Line line, int color, int gapSize){
-        int x1 = line.getFirst().x;
-        int x2 = line.getSecond().x;
-        int y1 = line.getFirst().y;
-        int y2 = line.getSecond().y;
+        int x1 = line.getStart().x;
+        int x2 = line.getEnd().x;
+        int y1 = line.getStart().y;
+        int y2 = line.getEnd().y;
 
         //TODO
         // create Line using 4 coordinates
@@ -48,10 +48,10 @@ public class LineRasterizerBresenham extends Liner {
     }
 
     public void plotLineLow(RasterBI img, Line line, int color, int gapSize) {
-        int x1 = line.getFirst().x;
-        int x2 = line.getSecond().x;
-        int y1 = line.getFirst().y;
-        int y2 = line.getSecond().y;
+        int x1 = line.getStart().x;
+        int x2 = line.getEnd().x;
+        int y1 = line.getStart().y;
+        int y2 = line.getEnd().y;
 
 
         int dx = x2 - x1;
@@ -82,10 +82,10 @@ public class LineRasterizerBresenham extends Liner {
     }
 
     public void plotLineHigh(RasterBI img, Line line, int color, int gapSize) {
-        int x1 = line.getFirst().x;
-        int x2 = line.getSecond().x;
-        int y1 = line.getFirst().y;
-        int y2 = line.getSecond().y;
+        int x1 = line.getStart().x;
+        int x2 = line.getEnd().x;
+        int y1 = line.getStart().y;
+        int y2 = line.getEnd().y;
 
         int dx = x2 - x1;
         int dy = y2 - y1;

@@ -20,11 +20,11 @@ public class Point {
 
         for(int i = 0; i < lines.size(); i++){
 
-            double radiusFirst = calculateRadius(lines.get(i).getFirst());
-            double radiusSecond = calculateRadius(lines.get(i).getSecond());
+            double radiusFirst = calculateRadius(lines.get(i).getStart());
+            double radiusSecond = calculateRadius(lines.get(i).getEnd());
 
-            Point firstPoint = lines.get(i).getFirst();
-            Point secondPoint = lines.get(i).getSecond();
+            Point firstPoint = lines.get(i).getStart();
+            Point secondPoint = lines.get(i).getEnd();
 
             if(radiusFirst <= 20 || radiusSecond <= 20){
 
@@ -44,5 +44,9 @@ public class Point {
 
     public double calculateRadius(Point start){
         return Math.sqrt(Math.pow((start.x - this.x), 2) + Math.pow((start.y - this.y), 2));
+    }
+
+    public double length(){
+        return Math.sqrt(x * x + y * y);
     }
 }

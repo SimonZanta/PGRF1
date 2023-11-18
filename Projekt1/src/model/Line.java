@@ -2,31 +2,31 @@ package model;
 
 public class Line {
 
-    Point first, second;
+    Point start, end;
 
     public Line(Point point1, Point point2){
-        first =  new Point(point1.x, point1.y);
-        second =  new Point(point2.x, point2.y);
+        start =  new Point(point1.x, point1.y);
+        end =  new Point(point2.x, point2.y);
     }
 
     public Line(int x1, int y1, int x2, int y2){
-        first =  new Point(x1, y1);
-        second =  new Point(x2, y2);
+        start =  new Point(x1, y1);
+        end =  new Point(x2, y2);
     }
 
-    public Point getFirst() {
-        return first;
+    public Point getStart() {
+        return start;
     }
-    public Point getSecond() {
-        return second;
+    public Point getEnd() {
+        return end;
     }
 
 
     public Point returnAngledPoint() {
-        int x1 = this.getFirst().x;
-        int x2 = this.getSecond().x;
-        int y1 = this.getFirst().y;
-        int y2 = this.getSecond().y;
+        int x1 = this.getStart().x;
+        int x2 = this.getEnd().x;
+        int y1 = this.getStart().y;
+        int y2 = this.getEnd().y;
 
         int dx = x2 - x1;
         int dy = y2 - y1;

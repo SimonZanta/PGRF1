@@ -33,10 +33,10 @@ public class LineRasterizerMidpoint extends Liner {
 
     public void midpoitAlgorithm(RasterBI img, Line line, int dotSpace, int color){
 
-        int x1 = line.getFirst().x;
-        int x2 = line.getSecond().x;
-        int y1 = line.getFirst().y;
-        int y2 = line.getSecond().y;
+        int x1 = line.getStart().x;
+        int x2 = line.getEnd().x;
+        int y1 = line.getStart().y;
+        int y2 = line.getEnd().y;
 
         int sx = (x1 + x2) / 2;
         int sy = (y1 + y2) / 2;
