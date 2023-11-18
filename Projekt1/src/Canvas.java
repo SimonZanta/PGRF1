@@ -12,6 +12,7 @@ import rasterOp.LineRasterizers.Liner;
 import rasterOp.PolygonRasterizers.ElipseRasterizer;
 import rasterOp.PolygonRasterizers.PolygonRasterizer;
 import rasterOp.PolygonRasterizers.RecrangleRasterizer;
+import rasterOp.PolylineClip;
 
 import javax.swing.*;
 import java.awt.*;
@@ -150,11 +151,14 @@ public class Canvas {
         RecrangleRasterizer recrangleRasterizer = new RecrangleRasterizer();
         ElipseRasterizer elipseRasterizer = new ElipseRasterizer();
 
+        ArrayList<Point> newPoligon = PolylineClip.createData(img);
+        ScanLine scanLine = new ScanLine(newPoligon);
+        scanLine.fill(img);
         // panel listeners
         panel.addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseClicked(MouseEvent e) {
+
                 if(createPoligon) {
                     img.clear(0x000000);
                     lineRaster.redrawLines(img, lines);
@@ -316,13 +320,8 @@ public class Canvas {
             }
         });
     }
-
-/*    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Canvas(800, 600));
-    }*/
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Canvas(1920, 1000));
+        SwingUtilities.invokeLater(() -> new Canvas(800, 600));
     }
 
 }
