@@ -1,6 +1,6 @@
 package rasterOp;
 
-import model.Edge;
+import model.Line;
 import model.Point;
 import model.Polygon;
 import rasterData.RasterBI;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class PolylineClip {
 
     public static ArrayList<Point> clip(Polygon subjectPolygon, Polygon clipPolygon){
-        ArrayList<Edge> clipPolygonEdge = clipPolygon.getEdges();
+        ArrayList<Line> clipPolygonEdge = clipPolygon.getEdges();
         ArrayList<Point> subjectPolygonVert = subjectPolygon.getVertexArray();
         ArrayList<Point> out = subjectPolygonVert;
         ArrayList<Point> prevOut = new ArrayList<>();
@@ -21,7 +21,7 @@ public class PolylineClip {
             prevOut.addAll(out);
             out.clear();
 
-            Edge edgeCurrent = clipPolygonEdge.get(edge);
+            Line edgeCurrent = clipPolygonEdge.get(edge);
 
             for(int i = 0; i < prevOut.size(); i++){
 
@@ -50,7 +50,7 @@ public class PolylineClip {
         return out;
     }
 
-    public static boolean isInside(Point p, Edge edge){
+    public static boolean isInside(Point p, Line edge){
         Point first = edge.getStart();
         Point second = edge.getEnd();
 
@@ -69,7 +69,7 @@ public class PolylineClip {
 
         return cosAlpha < 0;
     }
-    public static Point getIntersect(Point prev, Point current, Edge clipEdge){
+    public static Point getIntersect(Point prev, Point current, Line clipEdge){
         int x1 = prev.x;
         int y1 = prev.y;
         int x2 = current.x;
@@ -90,9 +90,9 @@ public class PolylineClip {
     public static ArrayList<Point> createData(RasterBI img){
         ArrayList<Point> subjectPolygonVertArr = new ArrayList<>();
         subjectPolygonVertArr.add(new Point(40,30));
+        subjectPolygonVertArr.add(new Point(40,140));
+        subjectPolygonVertArr.add(new Point(140,140));
         subjectPolygonVertArr.add(new Point(140,30));
-        subjectPolygonVertArr.add(new Point(40,120));
-
 
         Polygon subjectPolygon = new Polygon(subjectPolygonVertArr);
 
